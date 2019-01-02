@@ -1,13 +1,7 @@
-#!/usr/bin/env python
-# coding: utf-8
-
 # # COFGA 
 # 
 # ### Created by
 # #### Rasmus Davidsen & Lukkas Hamann
-
-# In[10]:
-
 
 import numpy as np
 import pandas as pd
@@ -39,27 +33,15 @@ from COFGA_dataset import CofgaDataset
 
 
 # ## Define run
-
-# In[11]:
-
-
 # define name of output files
-results_name = "results_resnet152_dropOut_wD_bN_noColor_map.csv"
-results_name_AP_val = "Results_resnet152_dropOut_wD_bN_noColor_AP_val.csv"
-results_name_AP_train = "Results_resnet152_dropOut_wD_bN_noColor_AP_train.csv"
+results_name = "results_resnet152_dropOut_wD_bN_map.csv"
+results_name_AP_val = "Results_resnet152_dropOut_wD_bN_AP_val.csv"
+results_name_AP_train = "Results_resnet152_dropOut_wD_bN_AP_train.csv"
 
 
 # ## Data augmentation
-
-# In[12]:
-
-
-# list of features to be transformed
-#featureList = ["ladder", "minibus", "cement mixer", "tanker", "prime mover"]
-
-
 # random rotation within +/- 10 degrees
-degrees = 10
+degrees = 5
 rotation_transform = transforms.Compose([transforms.RandomRotation(degrees), transforms.ToTensor(),])
 
 # perfoming horizontal flip with a given probability
@@ -72,24 +54,20 @@ vert_transform = transforms.Compose([transforms.RandomVerticalFlip(prob), transf
 
 
 # color changes
-# brightness = 10
-# contrast = 10
-# saturation = 10
-# hue = 0.25
-# color_transform = transforms.Compose([transforms.ColorJitter(brightness=brightness, contrast=contrast,
-#                                          saturation=saturation, hue=hue), transforms.ToTensor(),])
+brightness = 10
+contrast = 10
+saturation = 10
+hue = 0.25
+color_transform = transforms.Compose([transforms.ColorJitter(brightness=brightness, contrast=contrast,
+                                         saturation=saturation, hue=hue), transforms.ToTensor(),])
 
 
 # allows to chose randomly from the different transformations
 transform_list = transforms.RandomChoice([rotation_transform, hoz_transform,
-                                          vert_transform])
+                                          vert_transform, color_transform])
 
 
 # ## Loading the data
-
-# In[13]:
-
-
 # loading the custom dataset
 dataset = CofgaDataset(csv_file='dataset/train_preprocessed.csv',
                              root_dir='dataset/root/train/resized/',
@@ -107,15 +85,7 @@ COFGA_labels.insert(0, "epoch")
 
 
 
-
-
-
-
 # ## Constructing trainLoader and validation loader
-
-# In[14]:
-
-
 batch_size = 32
 
 # fraction of dataset to be validation set
@@ -166,9 +136,6 @@ print("\nDataloader completed")
 
 # ### Including cuda for GPU
 
-# In[15]:
-
-
 use_cuda = torch.cuda.is_available()
 
 def get_variable(x):
@@ -185,9 +152,6 @@ def get_numpy(x):
 
 
 # ### Defining the network
-
-# In[16]:
-
 
 NUM_CLASSES = 37
 
@@ -209,11 +173,9 @@ class COFGA_NET(nn.Module):
         
         self.bn_1 = nn.BatchNorm1d(1024)
         
-        #self.bn_2 = nn.BatchNorm1d(500)
-        
         self.relu1 = nn.ReLU(inplace=False)
         
-        self.drop = nn.Dropout(p=0.2, inplace=False)
+        self.drop = nn.Dropout(p=0.5, inplace=False)
         
         self.dense_1 = nn.Linear(1024, 500)
         
@@ -236,11 +198,7 @@ class COFGA_NET(nn.Module):
         
         x = self.dense_1(x)
         
-        #x = self.bn_2(x)
-        
         x = self.relu1(x)
-              
-        #x = self.drop(x)
         
         x = self.l_out(x)
 
@@ -260,8 +218,6 @@ print("Network constructed")
 
 # ### Defining the loss function and the optimizer
 
-# In[17]:
-
 
 import torch.optim as optim
 
@@ -274,13 +230,10 @@ optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9, weight_decay=0.0
 
 # ## Train the network
 
-# In[18]:
-
-
 from sklearn.metrics import accuracy_score
 
 # number of epochs to train
-num_epoch = 300
+num_epoch = 200
 
 # train list for MAP_score 
 train_MAP_list = [] # Total
