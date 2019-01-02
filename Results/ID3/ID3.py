@@ -1,12 +1,7 @@
-
-# coding: utf-8
-
 # # COFGA 
 # 
 # ### Created by
 # #### Rasmus Davidsen & Lukkas Hamann
-
-# In[55]:
 
 import numpy as np
 import pandas as pd
@@ -39,8 +34,6 @@ from COFGA_dataset import CofgaDataset
 
 # ## Define run
 
-# In[56]:
-
 # define name of output files
 results_name = "results_mixed_aug_map.csv"
 results_name_AP_val = "Results_mixed_aug_AP_val.csv"
@@ -49,10 +42,8 @@ results_name_AP_train = "Results_mixed_aug_AP_train.csv"
 
 # ## Data augmentation
 
-# In[57]:
-
-# random rotation within +/- 10 degrees
-degrees = 10
+# random rotation 
+degrees = 5
 rotation_transform = transforms.Compose([transforms.RandomRotation(degrees), transforms.ToTensor(),])
 
 # perfoming horizontal flip with a given probability
@@ -71,18 +62,11 @@ saturation = 10
 hue = 0.25
 color_transform = transforms.Compose([transforms.ColorJitter(brightness=brightness, contrast=contrast,
                                          saturation=saturation, hue=hue), transforms.ToTensor(),])
-
-
 # allows to chose randomly from the different transformations
 transform_list = transforms.RandomChoice([rotation_transform, hoz_transform,
                                           vert_transform, color_transform])
 
-
-
-
 # ## Loading the data
-
-# In[58]:
 
 # loading the custom dataset
 dataset = CofgaDataset(csv_file='dataset/train_preprocessed.csv',
@@ -101,14 +85,7 @@ COFGA_labels.insert(0, "epoch")
 
 
 
-
-
-
-
-
 # ## Constructing trainLoader and validation loader
-
-# In[59]:
 
 batch_size = 32
 
@@ -160,8 +137,6 @@ print("\nDataloader completed")
 
 # ### Including cuda for GPU
 
-# In[60]:
-
 use_cuda = torch.cuda.is_available()
 
 def get_variable(x):
@@ -178,8 +153,6 @@ def get_numpy(x):
 
 
 # ### Defining the network
-
-# In[61]:
 
 NUM_CLASSES = 37
 
@@ -228,26 +201,16 @@ print("Network constructed")
 
 # ### Defining the loss function and the optimizer
 
-# In[62]:
-
 import torch.optim as optim
 
 # adddin the Binary cross entropy loss function
 criterion = nn.BCELoss(reduction='sum')
 
 # defining the optimizer
-optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)#, weight_decay=5e-4)
+optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
 
 
 # ## Train the network
-
-# In[ ]:
-
-
-
-
-# In[63]:
-
 from sklearn.metrics import accuracy_score
 
 # number of epochs to train
@@ -409,16 +372,3 @@ with open(results_name_AP_train, "w") as train_AP_tocsv:
     writer.writerow(COFGA_labels)
     for item in train_AP_list:
         writer.writerow(item[i] for i in range(0,len(COFGA_labels)))
-
-
-
-
-# In[ ]:
-
-
-
-
-# In[ ]:
-
-
-

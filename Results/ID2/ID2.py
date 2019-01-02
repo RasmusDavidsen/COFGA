@@ -1,13 +1,7 @@
-
-# coding: utf-8
-
 # # COFGA 
 # 
 # ### Created by
 # #### Rasmus Davidsen & Lukkas Hamann
-
-# In[1]:
-
 import numpy as np
 import pandas as pd
 from skimage.io import imread
@@ -39,8 +33,6 @@ from COFGA_dataset import CofgaDataset
 
 # ## Define run
 
-# In[2]:
-
 # define name of output files
 results_name = "ResNet50_5degRot_aug__map.csv"
 results_name_AP_val = "ResNet50_5degRot_aug__AP_val.csv"
@@ -49,16 +41,10 @@ results_name_AP_train = "ResNet50_5degRot_aug_AP_train.csv"
 
 
 # ## Data augmentation
-
-# In[3]:
-
 degrees = 5
 data_transform = transforms.Compose([transforms.RandomRotation(degrees), transforms.ToTensor(),])
-#data_transform = None
 
 # ## Loading the data
-
-# In[4]:
 
 # loading the custom dataset
 dataset = CofgaDataset(csv_file='/zhome/b0/8/88043/COFGA_Project/dataset/train_preprocessed.csv',
@@ -77,14 +63,7 @@ COFGA_labels.insert(0, "epoch")
 
 
 
-
-
-
-
-
 # ## Constructing trainLoader and validation loader
-
-# In[5]:
 
 batch_size = 32
 
@@ -136,8 +115,6 @@ print("\nDataloader completed")
 
 # ### Including cuda for GPU
 
-# In[6]:
-
 use_cuda = torch.cuda.is_available()
 
 def get_variable(x):
@@ -154,8 +131,6 @@ def get_numpy(x):
 
 
 # ### Defining the network
-
-# In[7]:
 
 NUM_CLASSES = 37
 
@@ -204,25 +179,16 @@ print("Network constructed")
 
 # ### Defining the loss function and the optimizer
 
-# In[8]:
-
 import torch.optim as optim
 
 # adddin the Binary cross entropy loss function
 criterion = nn.BCELoss(reduction='sum')
 
 # defining the optimizer
-optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)#, weight_decay=5e-4)
+optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
 
 
 # ## Train the network
-
-# In[ ]:
-
-
-
-
-# In[9]:
 
 from sklearn.metrics import accuracy_score
 

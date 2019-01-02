@@ -42,7 +42,7 @@ results_name_AP_train = "Results_resnet152_dropOut_wD_bN_noColor_AP_train.csv"
 
 # ## Data augmentation
 
-# random rotation within +/- 10 degrees
+# random rotation
 degrees = 5
 rotation_transform = transforms.Compose([transforms.RandomRotation(degrees), transforms.ToTensor(),])
 
