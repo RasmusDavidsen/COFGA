@@ -20,4 +20,5 @@
 
 * The notebook *COFGA_main.ipynb* loads and augment the data, constructs the network, train and evaluate the solution for every epoch and save these values to csv files.
 
+* The file *JobScript.sh* is used when training the network on the DTU HPC cluster.
 
