@@ -2,10 +2,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # reading the results csv file
-results = pd.read_csv('Results_100_epochs/ResNet50/4_ResNet50_Baseline_Paper_200epochs/ResNet50_no_aug__map.csv', delimiter=';')
+results = pd.read_csv('ID7_map.csv', delimiter=';')
 
 # Plotting the Loss function
-
 resultsPlot = plt.figure(figsize=(14,3))
 
 
@@ -16,8 +15,7 @@ plt.xlabel('Epoch')
 plt.ylabel('Loss')
 plt.ylim(0,20)
 plt.legend()
-#lossPlot.savefig('Results/ResNet152/2_5degRot_200epochs/validation.png')
-#plt.savefig('validation.png')
+
 
 
 
@@ -34,9 +32,8 @@ plt.legend()
 
 resultsPlot.suptitle('ID 7', fontsize=16)
 resultsPlot.subplots_adjust(bottom=0.2)
+resultsPlot.tight_layout(rect=[0, 0.03, 1, 0.95])
 
-resultsPlot.savefig('Results_100_epochs/ResNet152/4_mix_aug_dropout_bn_200epochs/MAP_VAL_ID_7.png')
+resultsPlot.savefig('ID7_plot')
 
 plt.show()
-
-#APs = pd.read_csv('Results.csv', delimiter=',')
