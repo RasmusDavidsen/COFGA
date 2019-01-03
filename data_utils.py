@@ -1,3 +1,5 @@
+# Only used for padding the images
+# Higly inspired from the course Deep Learning 02456
 import numpy as np
 import pandas as pd
 import os
